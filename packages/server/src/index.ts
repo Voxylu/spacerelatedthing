@@ -15,7 +15,7 @@ const gameServer = new Server({
 gameServer.register('space', SpaceRoom)
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 4000
-const host = process.env.ENDPOINT || 'localhost'
+const host = process.env.ENDPOINT || undefined
 
 gameServer.listen(port, host, undefined, () => {
   console.log(`Server started on http://${host}:${port}`)
