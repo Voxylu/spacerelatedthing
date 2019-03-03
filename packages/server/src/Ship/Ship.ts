@@ -79,7 +79,8 @@ export class Ship implements IShip {
         dy.p = element.dy
       }
     }
-    this.collisionRadius = Math.max(dx.n, dx.p, dy.p, dy.n) * 1.7
+    // this.collisionRadius = Math.max(dx.n, dx.p, dy.p, dy.n) * 1.7
+    this.collisionRadius = this.scale * 2
 
     this.speedOptions = ops.speedOptions
     this.orientationInc = degToRad(ops.orientationIncDeg)

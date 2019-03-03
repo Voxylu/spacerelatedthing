@@ -13,8 +13,8 @@
     "colyseus.js": "^0.9.16",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
+    "spaceward-shared": "1.0.0",
     "trucs": "^1.0.1",
-    "vancas": "^1.2.4",
-    "spaceward-shared": "1.0.0"
+    "vancas": "^1.2.4"
   }
 }

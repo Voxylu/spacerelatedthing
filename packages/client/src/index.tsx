@@ -4,7 +4,10 @@ import { VanvasWarpper } from './VancasWrapper'
 import { Game } from './Game'
 import { Message } from 'spaceward-shared'
 
-const wsUrl = process.env.WS_UTL || location.origin.replace(/^http/, 'ws')
+const wsUrl =
+  Number(location.port) === 3000
+    ? 'ws://test.local:4000'
+    : location.origin.replace(/^http/, 'ws')
 
 const main = async () => {
   const game = new Game({

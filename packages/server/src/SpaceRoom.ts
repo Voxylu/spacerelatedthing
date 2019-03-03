@@ -149,12 +149,14 @@ export class SpaceRoom extends Room<TrueSpaceRoomState> {
 
   onMessage(client: Client, message: Message) {
     const ship = this.state.ships[client.id]
-    ship.listener = (msg) => {
-      this.send(client, msg)
+    if (ship) {
+      ship.listener = (msg) => {
+        this.send(client, msg)
+      }
+      if (!ship) {
+        throw new Error('yo wtf')
+      }
+      messageHandler(message, ship)
     }
-    if (!ship) {
-      throw new Error('yo wtf')
-    }
-    messageHandler(message, ship)
   }
 }
