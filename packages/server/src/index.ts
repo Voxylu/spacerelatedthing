@@ -5,9 +5,7 @@ import { SpaceRoom } from './SpaceRoom'
 
 const app = express()
 
-app.use('/', (req, res) => {
-  res.end('Yes')
-})
+app.use(express.static('../server'))
 
 const server = http.createServer()
 const gameServer = new Server({
