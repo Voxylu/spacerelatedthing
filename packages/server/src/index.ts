@@ -2,10 +2,11 @@ import express = require('express')
 import * as http from 'http'
 import { Server } from 'colyseus'
 import { SpaceRoom } from './SpaceRoom'
+import * as path from 'path'
 
 const app = express()
 
-app.use(express.static('../client'))
+app.use(express.static(path.resolve(__dirname, '../client/')))
 app.get('/hello', (req, res) => {
   console.log('they want me to say hello')
   res.json({ message: 'hello' })
@@ -13,11 +14,11 @@ app.get('/hello', (req, res) => {
 
 const server = http.createServer(app)
 
-// const gameServer = new Server({
-//   server,
-// })
+const gameServer = new Server({
+  server,
+})
 
-// gameServer.register('space', SpaceRoom)
+gameServer.register('space', SpaceRoom)
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 4000
 // const host = process.env.ENDPOINT || undefined
