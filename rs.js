@@ -7,6 +7,9 @@ script('server').run(
 )
 
 script('build')
+  .execute(() => {
+    removeDir('./out/')
+  })
   .run('parcel build packages/client/src/index.html -d out/client')
   .run(
     'parcel build packages/server/src/index.ts -d out/server --target node --bundle-node-modules'
