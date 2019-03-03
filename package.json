@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "spacewar",
+  "workspaces": [
+    "packages/client",
+    "packages/server",
+    "packages/spaceward-shared"
+  ]
+}
