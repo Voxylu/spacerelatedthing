@@ -5,5 +5,8 @@
     "packages/client",
     "packages/server",
     "packages/spaceward-shared"
-  ]
+  ],
+  "scripts": {
+    "start": "node out/server/index.js"
+  }
 }
