@@ -4,9 +4,11 @@ import { VanvasWarpper } from './VancasWrapper'
 import { Game } from './Game'
 import { Message } from 'spaceward-shared'
 
+const wsUrl = process.env.WS_UTL || location.origin.replace(/^http/, 'ws')
+
 const main = async () => {
   const game = new Game({
-    serverUrl: 'ws://test.local:4000',
+    serverUrl: wsUrl,
     viewport: { width: 500, height: 500 },
   })
 
