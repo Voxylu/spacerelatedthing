@@ -15,6 +15,7 @@
     "@types/redis": "^2.8.10",
     "@types/shortid": "^0.0.29",
     "nodemon": "^1.18.10",
+    "rapidescript": "^1.0.4",
     "spaceward-shared": "1.0.0",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.3333"

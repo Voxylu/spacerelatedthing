@@ -7,6 +7,7 @@
     "packages/shared"
   ],
   "scripts": {
-    "start": "node out/server/index.js"
+    "start": "node out/server/index.js",
+    "build": "rs build"
   }
 }
