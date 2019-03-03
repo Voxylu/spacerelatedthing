@@ -1,13 +1,24 @@
+import * as express from 'express'
+import * as http from 'http'
 import { Server } from 'colyseus'
-import { createServer } from 'http'
 import { SpaceRoom } from './SpaceRoom'
 
-const app = new Server({
-  server: createServer(),
+const app = express()
+
+app.use('/', (req, res) => {
+  res.end('Yes')
 })
 
-app.register('space', SpaceRoom)
+const server = http.createServer()
+const gameServer = new Server({
+  server,
+})
 
-app.listen(4000, '192.168.1.30', undefined, () => {
-  console.log(`Server started`)
+gameServer.register('space', SpaceRoom)
+
+const port = process.env.PORT ? parseInt(process.env.PORT) : 4000
+const host = process.env.ENDPOINT || 'localhost'
+
+gameServer.listen(port, host, undefined, () => {
+  console.log(`Server started on http://${host}:${port}`)
 })
