@@ -3,4 +3,4 @@ old-packages/
 **/dist/
 .cache/
 out/
-**/yarn-error.log
+**/yarn-error.log*
