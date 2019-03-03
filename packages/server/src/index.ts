@@ -11,7 +11,7 @@ app.get('/hello', (req, res) => {
   res.json({ message: 'hello' })
 })
 
-const server = http.createServer()
+const server = http.createServer(app)
 
 // const gameServer = new Server({
 //   server,
