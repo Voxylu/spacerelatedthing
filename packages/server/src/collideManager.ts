@@ -1,5 +1,10 @@
 import { Ship } from './Ship'
-import { pureCircleCollider, ShipElement, Projectile } from 'spaceward-shared'
+import {
+  pureCircleCollider,
+  ShipElement,
+  Projectile,
+  ElementManager,
+} from 'spaceward-shared'
 
 export function forFor<T extends { id: string }, R>(
   elems: T[],
@@ -17,95 +22,53 @@ export function forFor<T extends { id: string }, R>(
   return res
 }
 
-interface Circle {
-  radius: number
-  x: number
-  y: number
-  id: string
-  parentId: string
-}
-const preCollider = (ops1: Circle, ops2: Circle) =>
-  pureCircleCollider(
-    {
-      id: ops1.id,
-      radius: ops1.radius,
-      x: ops1.x,
-      y: ops1.y,
-    },
-    {
-      id: ops2.id,
-      radius: ops2.radius,
-      x: ops2.x,
-      y: ops2.y,
-    }
-  )
-
-export const possiblyCollide = (ships: Ship[]) => {
-  const res = forFor(ships, (s, oS) =>
-    preCollider(
-      { ...s, radius: s.collisionRadius, parentId: s.id },
-      { ...oS, radius: oS.collisionRadius, parentId: s.id }
-    )
-  )
-  const possibly = res.filter((r) => r.r === true).map((r) => r.elems)
-  return possibly
-}
+const BULLETDAMAGE = 10
 
 /** Return [id, id][] */
 export const projectileAndSpaceShip = (
   ships: Ship[],
   projectiles: Projectile[]
 ) => {
-  // todo : optimize
-  const arragnedShips = ships.map((s) => ({
-    id: s.id,
-    x: s.x,
-    y: s.y,
-    radius: s.collisionRadius,
-    parentId: s.id,
-  }))
-  const res = forFor(arragnedShips.concat(projectiles), pureCircleCollider)
-  const possibly = res
-    .filter((r) => r.r === true)
-    .map((r) => r.elems)
-    .filter((e) => e[0].parentId !== e[1].parentId)
-  return possibly
-}
-
-export const actualltCollideBetweenPaS = (
-  elems: ShipElement[],
-  otherElems: ShipElement[]
-) => {
-  let hasCollided = false
-  for (const elem of elems) {
-    for (const otherElem of otherElems) {
-      const hasColision = elem.collide(otherElem)
-      if (hasColision) {
-        hasCollided = true
-        elem.life += DAMAGE
-        otherElem.life += DAMAGE
+  for (const projectile of projectiles) {
+    for (const ship of ships) {
+      const shipPossibleCollider = ElementManager.getPossibleCollisionRectangle(
+        ship
+      )
+      const hasCollision = shipPossibleCollider.collide(projectile)
+      if (hasCollision) {
+        ElementManager.collide(ship.elements, projectile, (el) => {
+          el.life -= BULLETDAMAGE / el.bulletProtection
+          projectile.time = 0
+        })
       }
     }
   }
-  return hasCollided
 }
 
-const DAMAGE = -5
+const HULLDAMAGE = 20
 
-export const actualltCollide = (
-  elems: ShipElement[],
-  otherElems: ShipElement[]
-) => {
-  let hasCollided = false
-  for (const elem of elems) {
-    for (const otherElem of otherElems) {
-      const hasColision = elem.collide(otherElem)
-      if (hasColision) {
-        hasCollided = true
-        elem.life += DAMAGE
-        otherElem.life += DAMAGE
+export const collisionBetweenShips = (ships: Ship[]) => {
+  const res = forFor(ships, (ship1, ship2) => {
+    const ship1PossibleCollider = ElementManager.getPossibleCollisionRectangle(
+      ship1
+    )
+    const ship2PossibleCollider = ElementManager.getPossibleCollisionRectangle(
+      ship2
+    )
+    return ship1PossibleCollider.collide(ship2PossibleCollider)
+  })
+  const possibleCollisions = res.filter(({ r }) => r).map(({ elems }) => elems)
+  for (const possibleCollision of possibleCollisions) {
+    const ship1 = possibleCollision[0]
+    const ship2 = possibleCollision[1]
+    for (const ship1Element of ship1.elements) {
+      for (const ship2Element of ship2.elements) {
+        const hasCollision = ship1Element.collide(ship2Element)
+        if (hasCollision) {
+          ship1Element.life -= HULLDAMAGE
+          ship2Element.life -= HULLDAMAGE
+        }
       }
     }
   }
-  return hasCollided
 }

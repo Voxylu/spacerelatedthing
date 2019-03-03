@@ -1,9 +1,12 @@
 import { Ship, ShipOptions } from './Ship'
-import { degToRad, TriangleOrientation } from 'spaceward-shared'
+import {
+  degToRad,
+  TriangleOrientation,
+  EnergyElement,
+  CannonElement,
+  ProjectileManager,
+} from 'spaceward-shared'
 import { random } from 'trucs'
-import { EnergyElement } from '../Elements/EnergyElement'
-import { CannonElement } from '../Elements/CannonElement'
-import { ProjectileManager } from '../Projectiles'
 
 interface CreateShipOptions {
   id: string
@@ -29,8 +32,7 @@ export const createShip = (ops: CreateShipOptions) => {
     x: random(ops.game.width, 0),
     y: random(ops.game.height, 0),
     elements: [
-      new EnergyElement({ dx: 0, dy: 0, shipId: ops.id }),
-      new EnergyElement({ dx: -scale, dy: 0, shipId: ops.id }),
+      // new EnergyElement({ dx: -scale, dy: 0, shipId: ops.id }),
       new CannonElement({
         dx: scale,
         dy: 0,
@@ -39,23 +41,25 @@ export const createShip = (ops: CreateShipOptions) => {
         shipId: ops.id,
       }),
       new EnergyElement({ dx: -scale, dy: scale, shipId: ops.id }),
-      new CannonElement({
-        dx: 0,
-        dy: scale,
-        orientation: TriangleOrientation.Right,
-        projectileManager: ops.projectileManage,
-        shipId: ops.id,
-      }),
-      new EnergyElement({ dx: -scale, dy: -scale, shipId: ops.id }),
-      new CannonElement({
-        dx: 0,
-        dy: -scale,
-        orientation: TriangleOrientation.Right,
-        projectileManager: ops.projectileManage,
-        shipId: ops.id,
-      }),
+      // new CannonElement({
+      //   dx: 0,
+      //   dy: scale,
+      //   orientation: TriangleOrientation.Right,
+      //   projectileManager: ops.projectileManage,
+      //   shipId: ops.id,
+      // }),
+      // new EnergyElement({ dx: -scale, dy: -scale, shipId: ops.id }),
+      // new CannonElement({
+      //   dx: 0,
+      //   dy: -scale,
+      //   orientation: TriangleOrientation.Right,
+      //   projectileManager: ops.projectileManage,
+      //   shipId: ops.id,
+      // }),
     ],
   }
+
+  // console.log(options.elements.map((e) => e.update))
 
   return new Ship(options)
 }

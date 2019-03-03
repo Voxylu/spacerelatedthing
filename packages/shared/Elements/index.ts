@@ -1,6 +1,13 @@
 import { Point, Hook } from '../'
+import { CannonElement } from './CannonElement'
+import { EnergyElement } from './EnergyElement'
+import { CockpitElement } from './CockpitElement'
 
 export * from './Projectile'
+export * from './BaseElement'
+export * from './CockpitElement'
+export * from './EnergyElement'
+export * from './CannonElement'
 
 export interface Viewport {
   width: number
@@ -40,6 +47,8 @@ export interface BaseShipElement extends BaseElement {
   bulletProtection: number
 
   parentId: string
+  parentsElementId: string[]
+  childsElementId: string[]
 
   dx: number
   dy: number
@@ -48,7 +57,11 @@ export interface BaseShipElement extends BaseElement {
 }
 
 export interface SquareShipElement extends BaseShipElement, SquareElement {
-  type: 'EnergyElement' | 'ThrusterElement'
+  type: 'EnergyElement' | 'ThrusterElement' | 'CockpitElement'
+}
+
+export interface CircleShipElement extends BaseShipElement, CircleElement {
+  type: 'CircleElement'
 }
 
 export interface ProjectileElement extends CircleElement {
@@ -69,4 +82,7 @@ export interface TriangleShipElement extends BaseShipElement, TriangleElement {
   pieceOrientation: TriangleOrientation
 }
 
-export type ShipElement = SquareShipElement | TriangleShipElement
+export type ShipElement =
+  | SquareShipElement
+  | TriangleShipElement
+  | CircleShipElement

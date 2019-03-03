@@ -1,4 +1,5 @@
-import { ShipElement } from './Elements'
+import { ShipElement, SquareElement } from './Elements'
+import { ElementManager } from './Managers'
 
 export interface IShip {
   scale: number
@@ -6,8 +7,6 @@ export interface IShip {
   y: number
 
   speed: number
-  collisionRadius: number
-
   /** Radian */
   orientation: number
 

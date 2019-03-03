@@ -5,6 +5,7 @@ import {
   BaseShipElement,
   GameElement,
 } from 'spaceward-shared'
+import { generate } from 'shortid'
 
 export interface BaseElementOptions {
   dx: number
@@ -19,7 +20,7 @@ export class BaseElement implements BaseShipElement {
 
   public x = 0
   public y = 0
-  public id = 'lol-not_impl3tEd'
+  public id = generate()
 
   public type = 'NotImplemented'
 
@@ -27,6 +28,9 @@ export class BaseElement implements BaseShipElement {
 
   public dx: number
   public dy: number
+
+  public parentsElementId = []
+  public childsElementId = []
 
   constructor(ops: BaseElementOptions) {
     this.parentId = ops.shipId

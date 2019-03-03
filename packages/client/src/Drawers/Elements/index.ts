@@ -2,6 +2,7 @@ import { Vancas } from 'vancas'
 import { ShipElement } from 'spaceward-shared'
 import { drawCannon } from './Cannon'
 import { drawEnergy } from './Energy'
+import { drawCockpit } from './Cockpit'
 
 interface DrawElementOptions {
   vancas: Vancas
@@ -35,6 +36,16 @@ export const drawElement = ({
     })
   } else if (element.type === 'EnergyElement') {
     drawEnergy({
+      drawX: x,
+      drawY: y,
+      height: element.height,
+      vancas,
+      width: element.width,
+      life: element.life,
+      maxLife: element.maxLife,
+    })
+  } else if (element.type === 'CockpitElement') {
+    drawCockpit({
       drawX: x,
       drawY: y,
       height: element.height,

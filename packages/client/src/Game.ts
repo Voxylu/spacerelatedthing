@@ -35,7 +35,6 @@ export class Game {
   private playerShip: IShip = {
     x: 0,
     y: 0,
-    collisionRadius: 0,
     elements: [],
     id: 'a',
     orientation: 0,
@@ -51,6 +50,8 @@ export class Game {
   private inputHandler: BaseInputDispatcher
 
   public alive = false
+
+  private sumDelta = 0
 
   constructor(ops: GameOps) {
     this.client = new Client(ops.serverUrl)
@@ -83,10 +84,22 @@ export class Game {
 
   public ping = 0
 
+  static wait(time: number) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, time)
+    })
+  }
+
   async setup() {
     await this.waitJoin()
+    // await Game.wait(5000)
+    // console.log('server joined')
 
     const state = this.room.state as SpaceRoomState
+
+    console.log(state)
 
     this.playerShip = state.ships[this.client.id!]
 
@@ -126,9 +139,14 @@ export class Game {
   }
 
   update(delta: number) {
+    this.sumDelta += delta
     const state = this.room.state as SpaceRoomState
     this.playerShip = state.ships[this.client.id!]
     this.decors.update(this.playerShip.x, this.playerShip.y)
+    if (this.sumDelta > 0.05) {
+      this.inputHandler.update()
+      this.sumDelta = 0
+    }
   }
 
   draw() {

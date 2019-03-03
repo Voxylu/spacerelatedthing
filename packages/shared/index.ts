@@ -33,6 +33,7 @@ export * from './Physics'
 export * from './Messages'
 export * from './Elements'
 export * from './IShip'
+export * from './Managers'
 export interface SpaceRoomState {
   game: {
     size: {

@@ -3,6 +3,7 @@ import { Point } from './SegmentIntersection'
 export * from './SegmentIntersection'
 export * from './RectangleCollider'
 export * from './CircleCollider'
+export * from './CircleToLine'
 
 export const updatePoint = (
   pointToRotate: Point,

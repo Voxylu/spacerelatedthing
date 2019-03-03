@@ -7,23 +7,48 @@ export class BaseInputDispatcher {
     this.listener = fn
   }
 
-  protected turn(direction: 'left' | 'right') {
-    this.listener({
-      type: 'rotate',
-      payload: { direction },
-    })
+  protected turnState: 'left' | 'right' | undefined
+  protected speedState: 'up' | 'down' | undefined
+  protected shoot: boolean = false
+
+  public update() {
+    if (this.turnState) {
+      this.listener({
+        type: 'rotate',
+        payload: { direction: this.turnState },
+      })
+    }
+    if (this.speedState) {
+      this.listener({
+        type: 'speed',
+        payload: { action: this.speedState },
+      })
+    }
+    if (this.shoot) {
+      this.listener({
+        type: 'shoot',
+      })
+      this.shoot = false
+    }
   }
 
-  protected speed(action: 'up' | 'down') {
-    this.listener({
-      payload: { action },
-      type: 'speed',
-    })
-  }
+  // protected turn(direction: 'left' | 'right') {
+  //   this.listener({
+  //     type: 'rotate',
+  //     payload: { direction },
+  //   })
+  // }
 
-  protected shoot() {
-    this.listener({ type: 'shoot' })
-  }
+  // protected speed(action: 'up' | 'down') {
+  //   this.listener({
+  //     payload: { action },
+  //     type: 'speed',
+  //   })
+  // }
+
+  // protected shoot() {
+  //   this.listener({ type: 'shoot' })
+  // }
 
   public destroy() {}
 }

@@ -5,19 +5,15 @@ import {
   SpaceRoomState,
   Message,
   createMessage,
+  ProjectileManager,
 } from 'spaceward-shared'
-import {
-  possiblyCollide,
-  actualltCollide as actualyCollide,
-  projectileAndSpaceShip,
-} from './collideManager'
-import { ProjectileManager } from './Projectiles'
+import { projectileAndSpaceShip, collisionBetweenShips } from './collideManager'
 
 const initialState: SpaceRoomState = {
   game: {
     size: {
-      width: 3000,
-      height: 3000,
+      width: 500,
+      height: 500,
     },
   },
   ships: {},
@@ -38,15 +34,28 @@ export class SpaceRoom extends Room<TrueSpaceRoomState> {
 
   onInit() {
     this.setState(initialState)
-    this.setSimulationInterval(() => this.update())
+    this.setSimulationInterval(this.update)
   }
 
-  update() {
+  private sumDelta = 0
+
+  update = () => {
     const now = Date.now()
     const delta = (now - this.lastTime) / 1000.0
 
+    // console.log('is shit comming')
+
+    // this.sumDelta += delta
+
+    // if (this.sumDelta > 1) {
+    //   console.log('Here is the state:')
+    //   console.log(this.state)
+    //   this.sumDelta = 0
+    // }
+
     for (const ship of Object.values(this.state.ships)) {
       ship.update(delta)
+      // Check if a spaceship is dead
       if (ship.isDead()) {
         const client = this.clients.find((c) => c.id === ship.id)
         if (client) {
@@ -63,6 +72,9 @@ export class SpaceRoom extends Room<TrueSpaceRoomState> {
       }
     }
 
+    // console.log('update of ship complete')
+
+    // Update projectiles
     for (let i = 0; i < this.state.projectiles.length; i++) {
       const projectile = this.state.projectiles[i]
       projectile.update(delta)
@@ -71,66 +83,20 @@ export class SpaceRoom extends Room<TrueSpaceRoomState> {
       }
     }
 
-    const pAs = projectileAndSpaceShip(
+    // console.log('projectile update finished')
+
+    // Collision between ships and projectiles
+    projectileAndSpaceShip(
       Object.values(this.state.ships),
       this.state.projectiles
     )
 
-    for (const possibleCollisiton of pAs) {
-      const id1 = possibleCollisiton[0].id
-      const id2 = possibleCollisiton[1].id
+    // console.log('projectile and space ship collision finishe')
 
-      const ship = Object.values(this.state.ships).find(
-        (p) => p.id === id1 || p.id === id2
-      )
+    // Collision between ships
+    collisionBetweenShips(Object.values(this.state.ships))
 
-      const projectile = this.state.projectiles.find(
-        (p) => p.id === id1 || p.id === id2
-      )
-
-      const BULLETDAMAGE = 10
-
-      if (projectile && ship) {
-        for (const elem of ship.elements) {
-          const hasCollided = elem.collide(projectile)
-          if (hasCollided) {
-            elem.life -= BULLETDAMAGE / elem.bulletProtection
-          }
-        }
-      }
-    }
-
-    const possibly = possiblyCollide(Object.values(this.state.ships))
-
-    for (const possibleCollisiton of possibly) {
-      const ship1 = possibleCollisiton[0]
-      const ship2 = possibleCollisiton[1]
-      actualyCollide(ship1.elements, ship2.elements)
-      // const hasCollided = actualyCollide(ship1.elements, ship2.elements)
-      // if (hasCollided) {
-      //   const msg: Message = {
-      //     type: 'servermsg',
-      //     payload: {
-      //       content: 'You are dead',
-      //       importance: 'high',
-      //     },
-      //   }
-      //   if (ship1.isDead()) {
-      //     const client1 = this.clients.find(({ id }) => id === ship1.id)
-      //     if (client1) {
-      //       this.send(client1, msg)
-      //       delete this.state.ships[client1.id]
-      //     }
-      //   }
-      //   if (ship2.isDead()) {
-      //     const client2 = this.clients.find(({ id }) => id === ship2.id)
-      //     if (client2) {
-      //       this.send(client2, msg)
-      //       delete this.state.ships[client2.id]
-      //     }
-      //   }
-      // }
-    }
+    // console.log('collison betwenn shipp')
 
     this.lastTime = now
   }

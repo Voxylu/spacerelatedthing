@@ -8,9 +8,9 @@ import {
   Segment,
 } from 'spaceward-shared'
 import { BaseElement, BaseElementOptions } from './BaseElement'
-import { ProjectileManager } from '../Projectiles'
-import { circleToLineCollide } from 'spaceward-shared/Physics/CircleToLine'
-// import { ProjectileManager } from '../Background'
+import { ProjectileManager } from '../Managers'
+import { circleToLineCollide } from '..'
+import { nonenumerable as nosync } from 'nonenumerable'
 
 export interface CannonElementOptions extends BaseElementOptions {
   orientation: TriangleOrientation
@@ -42,6 +42,7 @@ export class CannonElement extends BaseElement implements TriangleShipElement {
     this.dx = ops.dx
     this.dy = ops.dy
     this.projectileManager = ops.projectileManager
+    // nosync(this, 'projectileManager')
   }
 
   update(shipPosition: Point, orientation: number) {

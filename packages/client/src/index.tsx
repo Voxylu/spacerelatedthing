@@ -12,7 +12,10 @@ const wsUrl =
 const main = async () => {
   const game = new Game({
     serverUrl: wsUrl,
-    viewport: { width: 500, height: 500 },
+    viewport: {
+      width: document.documentElement.clientWidth - 10,
+      height: document.documentElement.clientHeight - 10,
+    },
   })
 
   const tp = (x: number, y: number) => {
@@ -31,13 +34,7 @@ const main = async () => {
   // @ts-ignore
   window.game = game
 
-  const App = () => (
-    <>
-      <h1>SpaceWar !</h1>
-      {/* <p>ping {game.ping}</p> */}
-      <VanvasWarpper vancas={game.vancas} />
-    </>
-  )
+  const App = () => <VanvasWarpper vancas={game.vancas} />
 
   render(<App />, document.getElementById('root'))
 }

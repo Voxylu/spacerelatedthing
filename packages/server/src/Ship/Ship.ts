@@ -5,10 +5,10 @@ import {
   ShipElement,
   IShip,
   Message,
-  circleCollider,
-  GameElement,
   Hook,
+  ElementManager,
 } from 'spaceward-shared'
+import { nosync } from 'colyseus'
 
 interface SpeedOptions {
   maxForward: number
@@ -49,11 +49,9 @@ export class Ship implements IShip {
   public orientation = 0
   private orientationInc: number
 
-  public elements: ShipElement[] = []
+  public elements: ShipElement[]
 
   public id: string
-
-  public collisionRadius: number
 
   public listener: (msg: Message) => any = () => {}
 
@@ -64,23 +62,16 @@ export class Ship implements IShip {
     this.y = ops.y
     this.scale = ops.scale
 
-    this.elements = ops.elements
-    const dx = { n: 0, p: 0 }
-    const dy = { n: 0, p: 0 }
-    for (const element of this.elements) {
-      if (element.dx < 0) {
-        dx.n = Math.abs(element.dx)
+    this.elements = ElementManager.getCockpit(this)
+    for (const element of ops.elements) {
+      const newElems = ElementManager.addElement(this, this.elements, element)
+      if (typeof newElems === 'string') {
+        console.error(newElems)
       } else {
-        dx.p = element.dx
-      }
-      if (element.dy < 0) {
-        dy.n = Math.abs(element.dy)
-      } else {
-        dy.p = element.dy
+        // newElems.map((e) => console.log(e.update))
+        this.elements = newElems
       }
     }
-    // this.collisionRadius = Math.max(dx.n, dx.p, dy.p, dy.n) * 1.7
-    this.collisionRadius = this.scale * 2
 
     this.speedOptions = ops.speedOptions
     this.orientationInc = degToRad(ops.orientationIncDeg)
@@ -128,6 +119,9 @@ export class Ship implements IShip {
     this.x += this.dx(delta)
     this.y += this.dy(delta)
 
+    // this.elements = ElementManager.updateElements(this.elements, th)
+    // this.elementManager.updateManager(this.x, this.y)
+
     // TDO: better
     // check if ship outside
     if (
@@ -143,24 +137,22 @@ export class Ship implements IShip {
       this.orientation += degToRad(180)
     }
 
-    for (let i = 0; i < this.elements.length; i++) {
-      const element = this.elements[i]
-      element.update(new Point(this.x, this.y), this.orientation)
-      if (element.life < 0) {
-        this.elements.splice(i, 1)
-      }
-    }
+    ElementManager.updateElements(
+      this.elements,
+      new Point(this.x, this.y),
+      this.orientation
+    )
   }
 
   public isDead() {
-    const centralElement = this.elements.find(
-      (el) => el.dx === 0 && el.dy === 0
-    )
-    if (centralElement && centralElement.life > 0) {
+    // return false
+    const cockpit = ElementManager.returnCockpit(this.elements)
+    if (cockpit && cockpit.life > 0) {
       return false
     } else {
       return true
     }
+    // return ElementManager.returnCockpit(this.elements) ?  : false
   }
 
   public launchHook(hookId: 'shoot') {
@@ -173,8 +165,6 @@ export class Ship implements IShip {
         id: this.id,
       },
     }
-    for (const element of this.elements) {
-      element.onHook(hook)
-    }
+    ElementManager.triggerHook(this.elements, hook)
   }
 }

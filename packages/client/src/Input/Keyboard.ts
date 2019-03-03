@@ -4,34 +4,36 @@ export class KeyBoardInput extends BaseInputDispatcher {
   constructor() {
     super()
 
-    window.addEventListener('keypress', this.handleKeyPress)
+    window.addEventListener('keydown', this.handeKey)
+    window.addEventListener('keyup', this.handeKey)
   }
 
-  handleKeyPress = (e: KeyboardEvent) => {
+  handeKey = (e: KeyboardEvent) => {
     switch (e.key) {
       case 'q':
       case 'ArrowLeft':
-        this.turn('left')
+        this.turnState = e.type === 'keydown' ? 'left' : undefined
         break
       case 'd':
       case 'ArrowRight':
-        this.turn('right')
+        this.turnState = e.type === 'keydown' ? 'right' : undefined
         break
       case 's':
       case 'ArrowDown':
-        this.speed('down')
+        this.speedState = e.type === 'keydown' ? 'down' : undefined
         break
       case 'z':
       case 'AarrowUp':
-        this.speed('up')
+        this.speedState = e.type === 'keydown' ? 'up' : undefined
         break
       case ' ':
-        this.shoot()
+        e.type === 'keydown' && (this.shoot = true)
         break
     }
   }
 
   destroy() {
-    window.removeEventListener('keypress', this.handleKeyPress)
+    window.removeEventListener('keydown', this.handeKey)
+    window.removeEventListener('keyup', this.handeKey)
   }
 }

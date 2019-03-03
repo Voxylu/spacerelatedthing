@@ -1,5 +1,12 @@
 {
   "name": "spaceward-shared",
   "version": "1.0.0",
-  "main": "index.ts"
+  "main": "index.ts",
+  "dependencies": {
+    "nonenumerable": "^1.1.1",
+    "shortid": "^2.2.14"
+  },
+  "devDependencies": {
+    "@types/shortid": "^0.0.29"
+  }
 }

@@ -4,7 +4,7 @@ export class Projectile implements ProjectileElement {
   public type: 'ProjectileElement' = 'ProjectileElement'
   public shape: 'circle' = 'circle'
   public radius = 5
-  public time = 500
+  public time = 200
   public speed = 400
 
   collide(other: GameElement): boolean {

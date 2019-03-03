@@ -1,5 +1,5 @@
 import { Vancas } from 'vancas'
-import { IShip, Viewport, radToDeg } from 'spaceward-shared'
+import { IShip, Viewport, radToDeg, ElementManager } from 'spaceward-shared'
 import { drawElement } from './Elements'
 
 interface DrawShipOptions {
@@ -31,6 +31,19 @@ export const drawShip = ({
             parentY: ship.y,
           })
         }
+        const possibleCollider = ElementManager.getPossibleCollisionRectangle({
+          ...ship,
+          x: drawX,
+          y: drawY,
+        })
+        vancas.rect({
+          stroke: true,
+          color: 'white',
+          x: possibleCollider.x,
+          y: possibleCollider.y,
+          width: possibleCollider.width,
+          height: possibleCollider.height,
+        })
       },
       {
         x: drawX,
@@ -38,13 +51,6 @@ export const drawShip = ({
         rotation: ship.orientation,
       }
     )
-    vancas.circle({
-      radius: ship.collisionRadius,
-      stroke: true,
-      color: 'white',
-      x: drawX,
-      y: drawY,
-    })
     vancas.text({
       text: `Speed: ${Math.round(ship.speed)}, Orientation: ${Math.round(
         radToDeg(ship.orientation)
@@ -69,12 +75,17 @@ export const drawShip = ({
         for (const element of ship.elements) {
           drawElement({ element, vancas, parentX: ship.x, parentY: ship.y })
         }
-        vancas.circle({
-          radius: ship.collisionRadius,
+        const possibleCollider = ElementManager.getPossibleCollisionRectangle(
+          ship
+        )
+        // const possibleCollider = ship.possibleCollider(ship.x, ship.y)
+        vancas.rect({
           stroke: true,
           color: 'white',
-          x: ship.x,
-          y: ship.y,
+          x: possibleCollider.x,
+          y: possibleCollider.y,
+          width: possibleCollider.width,
+          height: possibleCollider.height,
         })
       })
       .translate({
