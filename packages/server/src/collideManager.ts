@@ -22,7 +22,7 @@ export function forFor<T extends { id: string }, R>(
   return res
 }
 
-const BULLETDAMAGE = 10
+const BULLETDAMAGE = 20
 
 /** Return [id, id][] */
 export const projectileAndSpaceShip = (
@@ -31,15 +31,22 @@ export const projectileAndSpaceShip = (
 ) => {
   for (const projectile of projectiles) {
     for (const ship of ships) {
-      const shipPossibleCollider = ElementManager.getPossibleCollisionRectangle(
-        ship
-      )
-      const hasCollision = shipPossibleCollider.collide(projectile)
-      if (hasCollision) {
-        ElementManager.collide(ship.elements, projectile, (el) => {
-          el.life -= BULLETDAMAGE / el.bulletProtection
-          projectile.time = 0
-        })
+      if (ship.id !== projectile.parentId) {
+        const shipPossibleCollider = ElementManager.getPossibleCollisionRectangle(
+          ship
+        )
+        const hasCollision = shipPossibleCollider.collide(projectile)
+        if (hasCollision) {
+          ElementManager.collide(ship.elements, projectile, (el) => {
+            el.life -= BULLETDAMAGE / el.bulletProtection
+            console.log(
+              `Collision between ${el.type} of ${el.parentId} with ${
+                projectile.id
+              } of ${projectile.parentId}`
+            )
+            projectile.time = 0
+          })
+        }
       }
     }
   }

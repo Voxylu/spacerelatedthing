@@ -61,13 +61,19 @@ export class Game {
 
     this.vancas.update = (d) => this.update(d)
     this.vancas.render = () => this.draw()
-    this.vancas.canvasEl.style.border = '1px solid black'
+    // this.vancas.canvasEl.style.border = '1px solid black'
 
     if (isTouch()) {
-      this.inputHandler = new TouchInput()
+      this.inputHandler = new TouchInput(this.vancas, this.viewport)
     } else {
       this.inputHandler = new KeyBoardInput()
     }
+  }
+
+  public updateViewport(viewport: Viewport) {
+    this.viewport = viewport
+    this.vancas.width = viewport.width
+    this.vancas.height = viewport.height
   }
 
   /** Ugly method to wait until its joined */
@@ -79,16 +85,6 @@ export class Game {
           resolve()
         }
       }, 500)
-    })
-  }
-
-  public ping = 0
-
-  static wait(time: number) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve()
-      }, time)
     })
   }
 
@@ -144,7 +140,7 @@ export class Game {
     this.playerShip = state.ships[this.client.id!]
     this.decors.update(this.playerShip.x, this.playerShip.y)
     if (this.sumDelta > 0.05) {
-      this.inputHandler.update()
+      this.inputHandler.update(this.viewport)
       this.sumDelta = 0
     }
   }
@@ -152,6 +148,7 @@ export class Game {
   draw() {
     this.vancas.clear()
     this.vancas.background('black')
+    this.vancas.ctx.imageSmoothingEnabled = false
     if (this.alive) {
       const state = this.room.state as SpaceRoomState
       this.decors.draw(this.vancas)
@@ -172,13 +169,7 @@ export class Game {
           viewport: this.viewport,
         })
       }
-      this.vancas.text({
-        font: '15px Arial',
-        color: 'white',
-        text: String(this.ping),
-        x: 0,
-        y: 17,
-      })
     }
+    this.inputHandler.draw()
   }
 }

@@ -32,7 +32,7 @@ export const createShip = (ops: CreateShipOptions) => {
     x: random(ops.game.width, 0),
     y: random(ops.game.height, 0),
     elements: [
-      // new EnergyElement({ dx: -scale, dy: 0, shipId: ops.id }),
+      new EnergyElement({ dx: -scale, dy: 0, shipId: ops.id }),
       new CannonElement({
         dx: scale,
         dy: 0,
@@ -40,22 +40,7 @@ export const createShip = (ops: CreateShipOptions) => {
         projectileManager: ops.projectileManage,
         shipId: ops.id,
       }),
-      new EnergyElement({ dx: -scale, dy: scale, shipId: ops.id }),
-      // new CannonElement({
-      //   dx: 0,
-      //   dy: scale,
-      //   orientation: TriangleOrientation.Right,
-      //   projectileManager: ops.projectileManage,
-      //   shipId: ops.id,
-      // }),
-      // new EnergyElement({ dx: -scale, dy: -scale, shipId: ops.id }),
-      // new CannonElement({
-      //   dx: 0,
-      //   dy: -scale,
-      //   orientation: TriangleOrientation.Right,
-      //   projectileManager: ops.projectileManage,
-      //   shipId: ops.id,
-      // }),
+      // new EnergyElement({ dx: -scale, dy: scale, shipId: ops.id }),
     ],
   }
 

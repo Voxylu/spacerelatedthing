@@ -6,17 +6,32 @@ import { Message } from 'spaceward-shared'
 
 const wsUrl =
   Number(location.port) === 3000
-    ? 'ws://test.local:4000'
+    ? location.origin.replace(/^http/, 'ws').replace('3000', '4000')
     : location.origin.replace(/^http/, 'ws')
 
 const main = async () => {
   const game = new Game({
     serverUrl: wsUrl,
     viewport: {
-      width: document.documentElement.clientWidth - 10,
-      height: document.documentElement.clientHeight - 10,
+      width: window.innerWidth,
+      height: window.innerHeight,
+      // width: document.documentElement.clientWidth,
+      // height: document.documentElement.clientHeight,
     },
   })
+
+  const resize = () => {
+    game.updateViewport({
+      width: window.innerWidth,
+      height: window.innerHeight,
+      // width: document.documentElement.clientWidth,
+      // height: document.documentElement.clientHeight,
+    })
+  }
+
+  window.addEventListener('resize', resize)
+
+  window.addEventListener('orientationchange', resize)
 
   const tp = (x: number, y: number) => {
     const msg: Message = {

@@ -12,8 +12,8 @@ import { projectileAndSpaceShip, collisionBetweenShips } from './collideManager'
 const initialState: SpaceRoomState = {
   game: {
     size: {
-      width: 500,
-      height: 500,
+      width: 2000,
+      height: 2000,
     },
   },
   ships: {},
@@ -27,31 +27,18 @@ interface TrueSpaceRoomState extends SpaceRoomState {
 
 export class SpaceRoom extends Room<TrueSpaceRoomState> {
   private lastTime = 0
-  private projectileManager = new ProjectileManager((p) => {
-    // p.update(1) // go forward a bit to prevent collison with parent
+  private projectileManager = new ProjectileManager((p) =>
     this.state.projectiles.push(p)
-  })
+  )
 
   onInit() {
     this.setState(initialState)
     this.setSimulationInterval(this.update)
   }
 
-  private sumDelta = 0
-
   update = () => {
     const now = Date.now()
     const delta = (now - this.lastTime) / 1000.0
-
-    // console.log('is shit comming')
-
-    // this.sumDelta += delta
-
-    // if (this.sumDelta > 1) {
-    //   console.log('Here is the state:')
-    //   console.log(this.state)
-    //   this.sumDelta = 0
-    // }
 
     for (const ship of Object.values(this.state.ships)) {
       ship.update(delta)
@@ -72,8 +59,6 @@ export class SpaceRoom extends Room<TrueSpaceRoomState> {
       }
     }
 
-    // console.log('update of ship complete')
-
     // Update projectiles
     for (let i = 0; i < this.state.projectiles.length; i++) {
       const projectile = this.state.projectiles[i]
@@ -83,20 +68,14 @@ export class SpaceRoom extends Room<TrueSpaceRoomState> {
       }
     }
 
-    // console.log('projectile update finished')
-
     // Collision between ships and projectiles
     projectileAndSpaceShip(
       Object.values(this.state.ships),
       this.state.projectiles
     )
 
-    // console.log('projectile and space ship collision finishe')
-
     // Collision between ships
     collisionBetweenShips(Object.values(this.state.ships))
-
-    // console.log('collison betwenn shipp')
 
     this.lastTime = now
   }

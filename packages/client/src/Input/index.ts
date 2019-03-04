@@ -1,4 +1,4 @@
-import { Message } from 'spaceward-shared'
+import { Message, Viewport } from 'spaceward-shared'
 
 export class BaseInputDispatcher {
   private listener: (msg: Message) => any = () => {}
@@ -11,7 +11,7 @@ export class BaseInputDispatcher {
   protected speedState: 'up' | 'down' | undefined
   protected shoot: boolean = false
 
-  public update() {
+  public update(viewport: Viewport) {
     if (this.turnState) {
       this.listener({
         type: 'rotate',
@@ -32,23 +32,7 @@ export class BaseInputDispatcher {
     }
   }
 
-  // protected turn(direction: 'left' | 'right') {
-  //   this.listener({
-  //     type: 'rotate',
-  //     payload: { direction },
-  //   })
-  // }
-
-  // protected speed(action: 'up' | 'down') {
-  //   this.listener({
-  //     payload: { action },
-  //     type: 'speed',
-  //   })
-  // }
-
-  // protected shoot() {
-  //   this.listener({ type: 'shoot' })
-  // }
+  public draw() {}
 
   public destroy() {}
 }
