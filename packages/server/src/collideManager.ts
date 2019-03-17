@@ -23,7 +23,7 @@ export function forFor<T extends { id: string }, R>(
   return res
 }
 
-const BULLETDAMAGE = 20
+const BULLETDAMAGE = 70
 
 /** Return [id, id][] */
 export const projectileAndSpaceShip = (
@@ -56,7 +56,7 @@ export const projectileAndSpaceShip = (
   }
 }
 
-const HULLDAMAGE = 20
+const HULLDAMAGE = 2
 
 export const collisionBetweenShips = (ships: Ship[]) => {
   const res = forFor(ships, (ship1, ship2) => {
