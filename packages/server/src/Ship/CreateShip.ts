@@ -43,6 +43,23 @@ export const createShip = (ops: CreateShipOptions) => {
       new EnergyElement({ dx: 0, dy: -scale, shipId: ops.id }),
       new EnergyElement({ dx: 0, dy: -scale * 2, shipId: ops.id }),
       new EnergyElement({ dx: 0, dy: -scale * 3, shipId: ops.id }),
+      new EnergyElement({ dx: 0, dy: scale, shipId: ops.id }),
+      new EnergyElement({ dx: 0, dy: scale * 2, shipId: ops.id }),
+      new EnergyElement({ dx: 0, dy: scale * 3, shipId: ops.id }),
+      new CannonElement({
+        dx: scale,
+        dy: -scale * 3,
+        orientation: TriangleOrientation.Right,
+        projectileManager: ops.projectileManage,
+        shipId: ops.id,
+      }),
+      new CannonElement({
+        dx: scale,
+        dy: scale * 3,
+        orientation: TriangleOrientation.Right,
+        projectileManager: ops.projectileManage,
+        shipId: ops.id,
+      }),
       // new EnergyElement({ dx: -scale, dy: scale, shipId: ops.id }),
     ],
   }
