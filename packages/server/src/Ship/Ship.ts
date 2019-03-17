@@ -137,7 +137,7 @@ export class Ship implements IShip {
       this.orientation += degToRad(180)
     }
 
-    ElementManager.updateElements(
+    this.elements = ElementManager.updateElements(
       this.elements,
       new Point(this.x, this.y),
       this.orientation

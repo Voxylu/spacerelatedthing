@@ -9,19 +9,9 @@ import {
 import { BaseElement } from '../Elements/BaseElement'
 import { Point, reactangleCollider } from '../Physics'
 import { Hook } from '../Hooks'
+import { Rectangle } from 'littephysic'
 
 export class ElementManager {
-  // public cockpit = new CockpitElement({ dx: 0, dy: 0, shipId: this.ship.id })
-  // public elements: ShipElement[] = [this.cockpit]
-
-  // constructor() // private ship: { id: string; x: number; y: number; scale: number }
-  // {}
-
-  // public updateManager(x: number, y: number) {
-  //   this.ship.x = x
-  //   this.ship.y = y
-  // }
-
   static getCockpit(ship: IShip) {
     return [new CockpitElement({ dx: 0, dy: 0, shipId: ship.id })]
   }
@@ -84,16 +74,22 @@ export class ElementManager {
         maxDy.n = Math.abs(element.dy)
       }
     }
-    let res: SquareElement = {
-      collide: () => false, // Defined after,
-      height: maxDy.p + maxDy.n + ship.scale,
-      width: maxDx.p + maxDx.n + ship.scale,
-      x: ship.x - maxDx.n - ship.scale / 2,
-      y: ship.y - maxDy.n - ship.scale / 2,
-      id: ship.id,
-      shape: 'square',
-    }
-    res.collide = (other) => reactangleCollider(res, other)
+    let res = new Rectangle(
+      ship.x - maxDx.n - ship.scale / 2,
+      ship.y - maxDy.n - ship.scale / 2,
+      maxDx.p + maxDx.n + ship.scale,
+      maxDy.p + maxDy.n + ship.scale
+    )
+    // let res: SquareElement = {
+    //   collide: () => false, // Defined after,
+    //   height: maxDy.p + maxDy.n + ship.scale,
+    //   width: maxDx.p + maxDx.n + ship.scale,
+    //   x: ship.x - maxDx.n - ship.scale / 2,
+    //   y: ship.y - maxDy.n - ship.scale / 2,
+    //   id: ship.id,
+    //   shape: 'square',
+    // }
+    // res.collide = (other) => reactangleCollider(res, other)
     return res
   }
 
@@ -143,10 +139,19 @@ export class ElementManager {
     fnIfTrue: (element: ShipElement, other: T) => any
   ) {
     for (const element of baseElements) {
-      const hasCollision = element.collide(other)
-      if (hasCollision) {
+      const elementCollider = element.getCollider()
+      const otherCollider = other.getCollider()
+      if (otherCollider.collide(elementCollider)) {
         fnIfTrue(element, other)
       }
+      // for (const collider of element.getColliders()) {
+      //   for (const otherCollide of other.getColliders()) {
+      //     const hasCollision = collider.collide(otherCollide)
+      //     if (hasCollision) {
+      //       fnIfTrue(element, other)
+      //     }
+      //   }
+      // }
     }
   }
 
@@ -155,12 +160,19 @@ export class ElementManager {
     shipPosition: Point,
     shipOrientation: number
   ) {
-    const baseElements = _baseElements.slice(0)
+    let baseElements = _baseElements.slice(0)
+    const elementsToRemove = []
     for (const element of baseElements) {
       element.update(shipPosition, shipOrientation)
       if (element.life <= 0) {
-        ElementManager.removeElement(baseElements, element.id)
+        elementsToRemove.push(element.id)
+        // baseElements = ElementManager.removeElement(baseElements, element.id)
       }
+    }
+    for (const elemeId of elementsToRemove) {
+      console.log(baseElements.length)
+      baseElements = ElementManager.removeElement(baseElements, elemeId)
+      console.log(BaseElement.length)
     }
     return baseElements
   }
@@ -179,9 +191,8 @@ export class ElementManager {
     const elementI = baseElements.findIndex((el) => el.id === elementId)
     if (elementI !== -1) {
       const element = baseElements[elementI]
-      if (element.parentsElementId.length === 0) {
-        baseElements.splice(elementI, 1)
-      } else {
+      baseElements.splice(elementI, 1)
+      if (element.parentsElementId.length !== 0) {
         // Remove the element from his parents
         for (const parentId of element.parentsElementId) {
           const parent = baseElements.find(({ id }) => id === parentId)
@@ -191,20 +202,19 @@ export class ElementManager {
             )
           }
         }
-        // Remove him from his childrens and if they now orphans remove them
-        // Well that horrible
-        for (const childrenId of element.childsElementId) {
-          const children = baseElements.find((el) => el.id === childrenId)
-          if (children) {
-            children.parentsElementId = children.parentsElementId.filter(
-              (id) => id !== elementId
+      }
+      // Remove him from his childrens and if they now orphans remove them
+      for (const childrenId of element.childsElementId) {
+        const children = baseElements.find((el) => el.id === childrenId)
+        if (children) {
+          children.parentsElementId = children.parentsElementId.filter(
+            (id) => id !== elementId
+          )
+          if (children.parentsElementId.length === 0) {
+            const childrenI = baseElements.findIndex(
+              (el) => el.id === children.id
             )
-            if (children.parentsElementId.length === 0) {
-              const childrenI = baseElements.findIndex(
-                (el) => el.id === children.id
-              )
-              baseElements.splice(childrenI, 1)
-            }
+            baseElements.splice(childrenI, 1)
           }
         }
       }

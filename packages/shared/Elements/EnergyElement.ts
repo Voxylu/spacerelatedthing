@@ -4,6 +4,7 @@ import {
   SquareShipElement,
 } from 'spaceward-shared'
 import { BaseElement } from './BaseElement'
+import { Rectangle } from 'littephysic'
 
 export class EnergyElement extends BaseElement implements SquareShipElement {
   public type: 'EnergyElement' = 'EnergyElement'
@@ -13,7 +14,7 @@ export class EnergyElement extends BaseElement implements SquareShipElement {
 
   public shape: 'square' = 'square'
 
-  collide(other: GameElement): boolean {
-    return reactangleCollider(this, other)
+  getCollider() {
+    return new Rectangle(this.x, this.y, this.width, this.height)
   }
 }

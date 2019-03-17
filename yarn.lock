@@ -3437,6 +3437,16 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+littephysic@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/littephysic/-/littephysic-1.0.0.tgz#10b4e2f8c6f6de57344fa972d345306472f69663"
+  integrity sha512-Cf96ev5d+X2D62M+kjpIZkrkFOLU/QZQDmPAyzk9pWtwAJ87hPagBsXyRCR/d9Y3eVksp6W726M2Mz53FhSCqQ==
+
+littephysic@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/littephysic/-/littephysic-1.1.1.tgz#b9f31256f42571e16ee6df728defaef71f0fa910"
+  integrity sha512-G36B27ABx2z3wV0YylBgMs7O+85Suq40x3TE6i6PqyNGbg/of5taZJT0ly1jVUqmHpHQkeW1b5jKzmedA3MQ4w==
+
 lodash.clone@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clone/-/lodash.clone-4.5.0.tgz#195870450f5a13192478df4bc3d23d2dea1907b6"

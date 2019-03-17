@@ -6,6 +6,7 @@ import {
   GameElement,
 } from 'spaceward-shared'
 import { generate } from 'shortid'
+import { CollideElement } from 'littephysic'
 
 export interface BaseElementOptions {
   dx: number
@@ -38,9 +39,8 @@ export class BaseElement implements BaseShipElement {
     this.dy = ops.dy
   }
 
-  collide(other: GameElement) {
-    console.error('collide(): not implemented')
-    return false
+  getCollider(): CollideElement {
+    throw new Error('not implemented')
   }
 
   update(shipPosition: Point, orientation: number) {

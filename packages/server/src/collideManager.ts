@@ -5,6 +5,7 @@ import {
   Projectile,
   ElementManager,
 } from 'spaceward-shared'
+import { Rectangle } from 'littephysic'
 
 export function forFor<T extends { id: string }, R>(
   elems: T[],
@@ -35,15 +36,18 @@ export const projectileAndSpaceShip = (
         const shipPossibleCollider = ElementManager.getPossibleCollisionRectangle(
           ship
         )
-        const hasCollision = shipPossibleCollider.collide(projectile)
+        let hasCollision = projectile
+          .getCollider()
+          .collide(shipPossibleCollider)
         if (hasCollision) {
           ElementManager.collide(ship.elements, projectile, (el) => {
             el.life -= BULLETDAMAGE / el.bulletProtection
             console.log(
-              `Collision between ${el.type} of ${el.parentId} with ${
+              `Collision between ${el.type} of ${el.parentId} with projectile ${
                 projectile.id
               } of ${projectile.parentId}`
             )
+            console.log(el.life)
             projectile.time = 0
           })
         }
@@ -70,7 +74,10 @@ export const collisionBetweenShips = (ships: Ship[]) => {
     const ship2 = possibleCollision[1]
     for (const ship1Element of ship1.elements) {
       for (const ship2Element of ship2.elements) {
-        const hasCollision = ship1Element.collide(ship2Element)
+        let hasCollision = ship1Element
+          .getCollider()
+          .collide(ship2Element.getCollider())
+
         if (hasCollision) {
           ship1Element.life -= HULLDAMAGE
           ship2Element.life -= HULLDAMAGE

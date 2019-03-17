@@ -2,6 +2,7 @@ import { Point, Hook } from '../'
 import { CannonElement } from './CannonElement'
 import { EnergyElement } from './EnergyElement'
 import { CockpitElement } from './CockpitElement'
+import { CollideElement } from 'littephysic'
 
 export * from './Projectile'
 export * from './BaseElement'
@@ -18,7 +19,7 @@ export interface BaseElement {
   x: number
   y: number
   id: string
-  collide(other: GameElement): boolean
+  getCollider(): CollideElement
 }
 
 export interface SquareElement extends BaseElement {

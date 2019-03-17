@@ -1,4 +1,5 @@
 import { ProjectileElement, GameElement } from 'spaceward-shared'
+import { Circle } from 'littephysic'
 
 export class Projectile implements ProjectileElement {
   public type: 'ProjectileElement' = 'ProjectileElement'
@@ -9,6 +10,10 @@ export class Projectile implements ProjectileElement {
 
   collide(other: GameElement): boolean {
     throw new Error('not implemented')
+  }
+
+  getCollider() {
+    return new Circle(this.x, this.y, this.radius)
   }
 
   public update(delta: number) {
